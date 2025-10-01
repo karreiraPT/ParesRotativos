@@ -3,7 +3,6 @@ import random
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-from ai.analysis import analysis_with_ai, generate_summary, print_games
 from logic.scheduler import schedule_games
 from logic.stats import count_doubles_by_player, count_duels_by_player
 from logic.utils import generate_doubles_matrix, generate_opponents_matrix
@@ -107,22 +106,3 @@ if 'schedule' in st.session_state:
         duels = count_duels_by_player(schedule)
         duels_matrix = generate_opponents_matrix(duels, players)
         st.dataframe(duels_matrix)
-
-# AI Section
-if 'schedule' in st.session_state:
-    st.header("🤖 Análise da agenda com IA")
-
-    schedule = st.session_state['schedule']
-    players = st.session_state['players']
-
-    if st.button("Analisar com IA"):
-        with st.spinner("A IA está a analisar..."):
-            summary = generate_summary(match_time, total_time, start_time, courts)
-            summary_games = print_games(schedule)
-            analysis, prompt = analysis_with_ai(summary, summary_games)
-            #st.write(prompt)
-        st.session_state['ai_analysis'] = analysis
-
-    if 'ai_analysis' in st.session_state and st.session_state['ai_analysis'] is not None:
-        st.markdown("### 🧠 Resumo da IA")
-        st.markdown(st.session_state['ai_analysis'])
